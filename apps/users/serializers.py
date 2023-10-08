@@ -1,3 +1,5 @@
+from django.contrib.auth.hashers import make_password
+
 from django.contrib.auth import password_validation
 from rest_framework import serializers
 
@@ -27,7 +29,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if data.get('password') != data.get('password2'):
-            raise serializers.ValidationError("Passwords do not match.")
+            raise serializers.ValidationError("Пароли не совпадают.")
 
         password_validation.validate_password(data.get('password'))
 
@@ -40,3 +42,32 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "email",
+            "phone",
+            "username",
+            "is_admin",
+            "is_activ",
+        )
+
+
+class ResetChangePasswordSerializer(serializers.Serializer): # noqa
+    new_password = serializers.CharField(required=True)
+
+
+class LoginUserSerializer(serializers.ModelSerializer): # noqa
+
+    class Meta:
+        model = User
+        fields = (
+            "email",
+            "password"
+        )
+

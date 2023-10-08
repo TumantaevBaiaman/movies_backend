@@ -8,6 +8,8 @@ from movies_backend.yasg import urlpatterns as doc_url
 
 v1_api_urls = [
     path("user/", include("apps.users.urls")),
+    path("movie/", include("apps.movies.urls")),
+    path("genre/", include("apps.genres.urls")),
 ]
 
 api_urls = [
