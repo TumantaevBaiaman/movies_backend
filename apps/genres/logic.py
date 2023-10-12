@@ -9,10 +9,12 @@ from movies_backend.decorators import is_admin_decorator, is_admin_decorator_det
 
 @is_admin_decorator
 def create_genre(request):
+    print(request.data)
     serializer = GenreSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @is_admin_decorator_detail

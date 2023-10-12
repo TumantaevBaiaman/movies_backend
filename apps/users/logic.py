@@ -34,7 +34,7 @@ def send_confirmation_code_email(user_email, confirmation_code):
         return False
 
 
-def generate_confirmation_code(length=6):
+def generate_confirmation_code(length=4):
     characters = string.ascii_letters + string.digits
     temporary_password = ''.join(secrets.choice(characters) for _ in range(length))
     return temporary_password
@@ -134,7 +134,8 @@ def confirm_code_register(request):
             user.confirmation_code = None
             user.confirmation_code_created_at = None
             user.save()
-            return Response({'message': 'Адрес электронной почты подтвержден'}, status=status.HTTP_200_OK)
+            user_serializer = UserSerializer(instance=user)
+            return Response({'message': 'Адрес электронной почты подтвержден', 'user': user_serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Срок действия кода подтверждения истек'}, status=status.HTTP_400_BAD_REQUEST)
     else:

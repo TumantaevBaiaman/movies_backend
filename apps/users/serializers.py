@@ -62,6 +62,10 @@ class ResetChangePasswordSerializer(serializers.Serializer): # noqa
     new_password = serializers.CharField(required=True)
 
 
+class ConfirmCodeRegisterSerializer(serializers.Serializer): # noqa
+    confirmation_code = serializers.CharField(required=True)
+
+
 class LoginUserSerializer(serializers.ModelSerializer): # noqa
 
     class Meta:

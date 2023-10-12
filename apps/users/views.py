@@ -1,13 +1,25 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 
 from apps.users.logic import create_user_with_tokens, profile_user, confirm_code_register, resend_confirm_code_register, \
     reset_code, verify_reset_code, reset_change_password, login_user
+from apps.users.serializers import LoginUserSerializer, UserRegisterSerializer, UserSerializer, \
+    ConfirmCodeRegisterSerializer
 
 
 class UserRegistrationAPIView(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(
+        responses={200: UserRegisterSerializer()},
+        request_body=UserRegisterSerializer(),
+        operation_description="""
+                `POST` - Регистрация пользователя.
+                После регистрации на почту придет почта
+                Не требуется авторизация.
+                """
+    )
     def post(self, request, *args, **kwargs):   # noqa
         return create_user_with_tokens(request)
 
@@ -15,6 +27,14 @@ class UserRegistrationAPIView(APIView):
 class UserLoginAPIView(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(
+        responses={200: LoginUserSerializer()},
+        request_body=LoginUserSerializer(),
+        operation_description="""
+            `POST` - Авторизация пользователя.
+            Не требуется авторизация.
+            """
+    )
     def post(self, request, *args, **kwargs):   # noqa
         return login_user(request)
 
@@ -22,6 +42,12 @@ class UserLoginAPIView(APIView):
 class UserProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        responses={200: UserSerializer()},
+        operation_description="""
+                `GET` - Профил пользователя.
+                """
+    )
     def get(self, request, *args, **kwargs):   # noqa
         return profile_user(request.user)
 
@@ -29,6 +55,13 @@ class UserProfileAPIView(APIView):
 class ConfirmCodeRegisterAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        responses={200: UserSerializer()},
+        request_body=ConfirmCodeRegisterSerializer(),
+        operation_description="""
+                    `POST` - Подверждение пороля.
+                    """
+    )
     def post(self, request):
         return confirm_code_register(request)
 
@@ -36,6 +69,11 @@ class ConfirmCodeRegisterAPIView(APIView):
 class ResendConfirmCodeRegisterAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        operation_description="""
+                        `GET` - Отправка снова.
+                        """
+    )
     def get(self, request):
         return resend_confirm_code_register(request)
 
