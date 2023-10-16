@@ -13,6 +13,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
+from apps.favorites.models import Favorite
 from apps.users.models import User
 from apps.users.serializers import UserRegisterSerializer, UserSerializer, ResetChangePasswordSerializer, \
     LoginUserSerializer
@@ -35,7 +36,7 @@ def send_confirmation_code_email(user_email, confirmation_code):
 
 
 def generate_confirmation_code(length=4):
-    characters = string.ascii_letters + string.digits
+    characters = string.digits
     temporary_password = ''.join(secrets.choice(characters) for _ in range(length))
     return temporary_password
 
@@ -47,6 +48,7 @@ def create_user(data):
         confirmation_code = generate_confirmation_code()
         user.confirmation_code = confirmation_code
         user.confirmation_code_created_at = timezone.now()
+        Favorite.objects.create(user=user).save()
         user.save()
         send = send_confirmation_code_email(user_email=serializer.validated_data.get("email"), confirmation_code=confirmation_code)
         if send:
@@ -78,7 +80,6 @@ def create_user_with_tokens(request):
             "id": user.id,
             "email": user.email,
             "username": user.username,
-            "phone": user.phone,
             "is_admin": user.is_admin,
         }
         response_data = {
@@ -187,7 +188,6 @@ def reset_code(request):
 
 def verify_reset_code(request, token):
     data_user = token_to_dict(token)
-    print(data_user)
     email = data_user["email"]
     moments_time = data_user["time"]
     verify_code = request.data.get("verify_code")

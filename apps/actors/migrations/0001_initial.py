@@ -13,14 +13,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Genre',
+            name='Actor',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=255, unique=True)),
+                ('photo', models.ImageField(upload_to='actor')),
             ],
             options={
-                'verbose_name': 'Жанр',
-                'verbose_name_plural': 'Жанры',
+                'verbose_name': 'Актер',
+                'verbose_name_plural': 'Актеры',
             },
         ),
     ]

@@ -5,7 +5,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 
-from apps.movies.logic import list_movies, detail_movie, delete_movie, put_movie, path_movie, create_movie
+from apps.movies.logic import list_movies, detail_movie, delete_movie, put_movie, path_movie, create_movie, \
+    list_movie_genre, list_movie_recommendation
 from apps.movies.serializers import MovieSerializer
 
 
@@ -47,6 +48,32 @@ class DetailMovieAPIView(APIView):
         """)
     def get(self, request, id):
         return detail_movie(request, id)
+
+
+class ListMovieGenreAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: MovieSerializer()},
+        operation_description="""
+                `GET` - Получить фильм по жанрам.
+                Не нужно авторизация
+        """)
+    def get(self, request, id_genre):
+        return list_movie_genre(request, id_genre)
+
+
+class ListMovieRecommendationAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: MovieSerializer()},
+        operation_description="""
+                `GET` - Получить фильм по рекоммендатации нужео id жанра.
+                Не нужно авторизация
+        """)
+    def get(self, request, id_genre):
+        return list_movie_recommendation(request, id_genre)
 
 
 class UpdateDestroyMovieAPIView(APIView):

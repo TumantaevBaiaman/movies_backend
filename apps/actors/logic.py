@@ -2,14 +2,14 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from apps.genres.models import Genre
-from apps.genres.serializers import GenreSerializer
+from apps.actors.models import Actor
+from apps.actors.serializers import ActorSerializer
 from movies_backend.decorators import is_admin_decorator, is_admin_decorator_detail
 
 
 @is_admin_decorator
-def create_genre(request):
-    serializer = GenreSerializer(data=request.data)
+def create_actor(request):
+    serializer = ActorSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -17,16 +17,16 @@ def create_genre(request):
 
 
 @is_admin_decorator_detail
-def delete_genre(request, id):  # noqa
-    genre = get_object_or_404(Genre, id=id)
-    genre.delete()
+def delete_actor(request, id):  # noqa
+    actor = get_object_or_404(Actor, id=id)
+    actor.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @is_admin_decorator_detail
-def path_genre(request, id):    # noqa
-    genre = get_object_or_404(Genre, id=id) # noqa
-    serializer = GenreSerializer(genre, data=request.data, partial=True)
+def path_actor(request, id):    # noqa
+    actor = get_object_or_404(actor, id=id) # noqa
+    serializer = ActorSerializer(actor, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -34,22 +34,22 @@ def path_genre(request, id):    # noqa
 
 
 @is_admin_decorator_detail
-def put_genre(request, id): # noqa
-    genre = get_object_or_404(Genre, id=id) # noqa
-    serializer = GenreSerializer(genre, data=request.data, partial=True)
+def put_actor(request, id): # noqa
+    actor = get_object_or_404(Actor, id=id) # noqa
+    serializer = ActorSerializer(actor, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def detail_genre(request, id):
-    genre = get_object_or_404(Genre, id=id)
-    serializer = GenreSerializer(instance=genre)
+def detail_actor(request, id):
+    actor = get_object_or_404(Actor, id=id)
+    serializer = ActorSerializer(instance=actor)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-def list_genres(data):
-    genres = Genre.objects.all()
-    serializer = GenreSerializer(instance=genres, many=True)
+def list_actors(data):
+    actors = Actor.objects.all()
+    serializer = ActorSerializer(instance=actors, many=True)
     return Response(serializer.data, status.HTTP_200_OK)

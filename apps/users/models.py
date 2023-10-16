@@ -10,7 +10,6 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     username = models.CharField("Имя пользователя", max_length=255)
-    phone = models.CharField("Номер телефона", max_length=30, unique=True, null=True, blank=True)
 
     is_activ = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

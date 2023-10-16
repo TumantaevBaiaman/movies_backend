@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.movies.models import Movie
+from apps.movies.models import Movie, FormatMovie
 
 
 # Register your models here.
@@ -8,5 +8,11 @@ class MovieAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "title",
-        "director"
+    )
+
+
+@admin.register(FormatMovie)
+class FormatMovieAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
     )

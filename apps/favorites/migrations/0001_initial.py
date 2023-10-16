@@ -9,18 +9,15 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('movies', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Genre',
+            name='Favorite',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, unique=True)),
+                ('movies', models.ManyToManyField(to='movies.movie')),
             ],
-            options={
-                'verbose_name': 'Жанр',
-                'verbose_name_plural': 'Жанры',
-            },
         ),
     ]

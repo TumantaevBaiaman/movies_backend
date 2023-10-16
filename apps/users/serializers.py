@@ -22,7 +22,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = (
             "username",
             "email",
-            "phone",
             "password",
             "password2",
         )
@@ -51,7 +50,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "email",
-            "phone",
             "username",
             "is_admin",
             "is_activ",

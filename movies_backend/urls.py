@@ -10,6 +10,9 @@ v1_api_urls = [
     path("user/", include("apps.users.urls")),
     path("movie/", include("apps.movies.urls")),
     path("genre/", include("apps.genres.urls")),
+    path("comment/", include("apps.comments.urls")),
+    path("actor/", include("apps.actors.urls")),
+    path("director/", include("apps.director.urls")),
 ]
 
 api_urls = [
