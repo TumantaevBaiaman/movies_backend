@@ -59,6 +59,6 @@ class FormatMovie(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     quality = models.CharField(max_length=255)
     movie_file = models.FileField(
-        upload_to="movie",
+        upload_to="format-movie",
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
     )

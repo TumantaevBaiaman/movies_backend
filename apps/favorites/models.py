@@ -18,3 +18,5 @@ class Favorite(models.Model):
 
     def remove_from_favorites(self, movie):
         self.movies.remove(movie)
+
+

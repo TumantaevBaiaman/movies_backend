@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.director.models import Director
+
+
+@admin.register(Director)
+class DirectorAdmin(admin.ModelAdmin):
+    list_display = ("id", "name")
