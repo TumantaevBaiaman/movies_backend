@@ -34,7 +34,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '0.0.0.0',
-    '13.51.204.159',
+    'movie-back-balancer-1086989028.eu-north-1.elb.amazonaws.com',
 ]
 
 
