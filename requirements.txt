@@ -89,7 +89,3 @@ tqdm==4.66.1
 typing_extensions==4.8.0
 tzdata==2023.3
 uritemplate==4.1.1
-urllib3==1.26.17
-webencodings==0.5.1
-winshell==0.6
-zipp==3.17.0
