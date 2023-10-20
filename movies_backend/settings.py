@@ -65,8 +65,6 @@ INSTALLED_APPS = [
     'drf_yasg',
     'mptt',
     'corsheaders',
-    'storages',
-    'ffmpeg',
 ]
 
 MIDDLEWARE = [
