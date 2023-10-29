@@ -13,6 +13,8 @@ v1_api_urls = [
     path("comment/", include("apps.comments.urls")),
     path("actor/", include("apps.actors.urls")),
     path("director/", include("apps.director.urls")),
+    path("favorite/", include("apps.favorites.urls")),
+    path("series/", include("apps.series.urls")),
 ]
 
 api_urls = [

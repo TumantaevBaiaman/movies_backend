@@ -3,7 +3,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from apps.favorites.models import Favorite
-from apps.favorites.serializers import FavoriteSerializer
+from apps.favorites.serializers import FavoriteSerializer, ViewFavoriteSerializer
 from apps.movies.models import Movie
 
 
@@ -49,7 +49,7 @@ def my_favorites(request):
     user = request.user
     try:
         favorite = Favorite.objects.get(user=user)
-        serializer = FavoriteSerializer(favorite)
+        serializer = ViewFavoriteSerializer(favorite)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Favorite.DoesNotExist:
         return Response({"error": "Favorite not found"}, status=status.HTTP_404_NOT_FOUND)
