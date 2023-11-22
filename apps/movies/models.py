@@ -27,6 +27,9 @@ class Movie(models.Model):
     poster = models.ImageField(
         blank=True, null=True, upload_to='poster', verbose_name="постер"
     )
+    horizontal_poster = models.ImageField(
+        blank=True, null=True, upload_to='horizontal-poster', verbose_name="горизонтальный постер"
+    )
     genres = models.ManyToManyField(
         Genre, verbose_name="жанры"
     )

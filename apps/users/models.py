@@ -4,6 +4,7 @@ import uuid
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -28,3 +29,24 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return f"Username: {self.username}"
+
+
+class Subscription(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+    ended_at = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+    def end_subscription(self):
+        self.ended_at = timezone.now()
+        self.active = False
+        self.save()
+
+    class Meta:
+        verbose_name = "подписька"
+        verbose_name_plural = "подписька"
+
+    def __str__(self) -> str:
+        return f"{self.user} {self.subscribed_at}"
+

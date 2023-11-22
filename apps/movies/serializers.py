@@ -5,6 +5,7 @@ from apps.actors.serializers import ActorSerializer
 from apps.comments.models import Comment
 from apps.comments.serializers import CommentSerializer
 from apps.director.serializers import DirectorSerializer
+from apps.favorites.models import Favorite
 from apps.genres.serializers import GenreSerializer
 from apps.movies.models import Movie, FormatMovie
 
@@ -20,20 +21,12 @@ class MovieViewSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(many=True, required=False)
     actors = ActorSerializer(many=True, required=False)
     directors = DirectorSerializer(many=True, required=False)
-    comments = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = Movie
         fields = '__all__'
-
-    def get_comments(self, obj):  # noqa
-        comments = Comment.objects.filter(movie=obj)
-        if comments.exists():
-            serializer = CommentSerializer(comments, many=True)
-            return serializer.data
-        else:
-            return None
 
     def get_rating(self, obj):  # noqa
         comments = Comment.objects.filter(movie=obj)
@@ -42,6 +35,16 @@ class MovieViewSerializer(serializers.ModelSerializer):
             return rating
         else:
             return 5.0
+
+    def get_is_favorite(self, obj):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user') and request.user.is_authenticated:
+            try:
+                favorite = Favorite.objects.get(user=request.user)
+                return obj in favorite.movies.all()
+            except Favorite.DoesNotExist:
+                pass
+        return False
 
 
 class FormatMovieSerializer(serializers.ModelSerializer):

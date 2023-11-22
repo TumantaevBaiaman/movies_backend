@@ -26,6 +26,9 @@ class Series(models.Model):
     poster = models.ImageField(
         blank=True, null=True, upload_to='poster', verbose_name="постер"
     )
+    horizontal_poster = models.ImageField(
+        blank=True, null=True, upload_to='horizontal-poster', verbose_name="горизонтальный постер"
+    )
     release_date = models.DateField(
         "дата выпуска"
     )
@@ -55,7 +58,7 @@ class Season(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False
     )
     series = models.ForeignKey(Series, on_delete=models.CASCADE)
-    season = models.IntegerField()
+    season = models.IntegerField(default=1)
     release_date = models.DateField(
         "дата выпуска"
     )
@@ -75,7 +78,8 @@ class SeriesVideo(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False
     )
-    series = models.FileField(
+    series = models.IntegerField(default=1)
+    series_video = models.FileField(
         upload_to="series-video",
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
     )

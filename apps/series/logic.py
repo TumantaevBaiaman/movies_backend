@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from apps.series.models import Series, Season
 from apps.series.serializers import CreateSeriesSerializer, CreateSeasonSerializer, CreateSeriesVideoSerializer, \
     SeriesViewSerializer
+from movies_backend.tools import get_filters, paginate_queryset
 
 
 def create_series(request):
@@ -68,6 +69,31 @@ def create_series_video(request, content_type, content_id):
 
 
 def list_series(request):
-    series = Series.objects.all()
-    serializer = SeriesViewSerializer(instance=series, many=True)
+    queryset = Series.objects.all()
+
+    filters_data = {
+        'title__icontains': request.GET.get('title'),
+        'genres__name__in': request.GET.getlist('genres'),
+        'is_free': request.GET.get('is_free')
+    }
+    if request.GET.get('release_date'):
+        filters_data['release_date__gte'] = request.GET.get('release_date')
+    filters = get_filters(request, filters_data)
+    queryset = queryset.filter(**filters)
+
+    paginated_data = paginate_queryset(request, queryset)
+
+    serializer = SeriesViewSerializer(paginated_data['results'], many=True)
+
+    return Response({
+        'count': paginated_data['count'],
+        'next': paginated_data['next'],
+        'previous': paginated_data['previous'],
+        'results': serializer.data
+    }, status=status.HTTP_200_OK)
+
+
+def detail_series(request, id):
+    series = get_object_or_404(Series, id=id)
+    serializer = SeriesViewSerializer(instance=series)
     return Response(serializer.data, status=status.HTTP_200_OK)

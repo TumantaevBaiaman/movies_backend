@@ -168,15 +168,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
 STATIC_URL = '/static/'
-STATIC_ROOT = (BASE_DIR / 'staticfiles')
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static"
-]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -247,29 +242,21 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 # settings file
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880000
 
-# AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
-# AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-# AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
-#
-# AWS_S3_SIGNATURE_NAME = 's3v4'
-# AWS_S3_REGION_NAME = 'us-east-1'
-#
-# AWS_DEFAULT_ACL = None
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_S3_VERIFY = True
-# AWS_QUERYSTRING_AUTH = False
-# AWS_LOCATION = 'static'
-# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# aws s3
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_S3_REGION_NAME=os.getenv("AWS_S3_REGION_NAME")
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_VERIFY = True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-
-# AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
-# AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
-# AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-# AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME")
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_DEFAULT_ACL = None
-# AWS_S3_VERITY = True
+# celery
+# CELERY_TIMEZONE = "Asia/Bishkek"
+# CELERY_TASK_TRACK_STARTED = True
+# CELERY_TASK_TIME_LIMIT = 30 * 60
 #
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# CELERY_BROKER_URL = f'redis://:{os.getenv("REDIS_PASSWORD", default="")}@redis:6379'
+# CELERY_RESULT_BACKEND = CELERY_BROKER_URL

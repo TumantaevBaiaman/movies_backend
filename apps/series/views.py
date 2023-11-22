@@ -5,8 +5,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from apps.series.logic import create_series, create_season, create_series_video, list_series
-from apps.series.serializers import CreateSeriesSerializer, CreateSeasonSerializer
+from apps.series.logic import create_series, create_season, create_series_video, list_series, detail_series
+from apps.series.serializers import CreateSeriesSerializer, CreateSeasonSerializer, SeriesViewSerializer
 from movies_backend.permissions import IsAuthenticatedAdmin
 
 
@@ -57,7 +57,29 @@ class CreateSeriesVideoView(APIView):
 class ListSeriesView(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(
+        responses={200: SeriesViewSerializer(many=True)},
+        operation_description="""
+            `GET` - Получить сериал.
+            Не нужно авторизация
+        """)
     def get(self, request):
         return list_series(request)
+
+
+class DetailSeriesAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: SeriesViewSerializer()},
+        operation_description="""
+                `GET` - Получить сериал по id.
+                Не нужно авторизация
+        """)
+    def get(self, request, id):
+        return detail_series(request, id)
+
+
+
 
 

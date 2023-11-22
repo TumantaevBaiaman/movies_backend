@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import password_validation
 from rest_framework import serializers
 
-from apps.users.models import User
+from apps.users.models import User, Subscription
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -57,7 +57,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ResetChangePasswordSerializer(serializers.Serializer): # noqa
-    new_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(
+        write_only=True,
+        style={'input_type': 'password'},
+        validators=[password_validation.validate_password]
+    )
 
 
 class ConfirmCodeRegisterSerializer(serializers.Serializer): # noqa
@@ -73,3 +77,13 @@ class LoginUserSerializer(serializers.ModelSerializer): # noqa
             "password"
         )
 
+
+class PasswordUpdateSerializer(serializers.Serializer):
+    new_password = serializers.CharField(write_only=True)
+    confirm_new_password = serializers.CharField(write_only=True)
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = '__all__'

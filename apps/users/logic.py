@@ -14,11 +14,9 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 from apps.favorites.models import Favorite
-from apps.users.models import User
+from apps.users.models import User, Subscription
 from apps.users.serializers import UserRegisterSerializer, UserSerializer, ResetChangePasswordSerializer, \
     LoginUserSerializer
-from movies_backend.logic import dict_to_token, token_to_dict
-
 
 def send_confirmation_code_email(user_email, confirmation_code):
 
@@ -49,6 +47,7 @@ def create_user(data):
         user.confirmation_code = confirmation_code
         user.confirmation_code_created_at = timezone.now()
         Favorite.objects.create(user=user).save()
+        Subscription.objects.create(user=user).save()
         user.save()
         send = send_confirmation_code_email(user_email=serializer.validated_data.get("email"), confirmation_code=confirmation_code)
         if send:
@@ -165,19 +164,12 @@ def reset_code(request):
         code = generate_confirmation_code()
         user.confirmation_code = code
         user.confirmation_code_created_at = moments_time
+        user.save()
         send = send_confirmation_code_email(user_email=user.email, confirmation_code=code)
-        data_token = {
-            "user_email": user.email,
-            "code": "movies_code",
-            "time": str(moments_time),
-            "status": True,
-        }
-        token = dict_to_token(data_token)
         if send:
             return Response(
                 {
                     "message": "Код отправлен на вашу почту",
-                    "token": token
                 }, status=status.HTTP_200_OK)
         else:
             return Response({'error': "Возникли ошибки при отправке на почту"},
@@ -186,17 +178,16 @@ def reset_code(request):
         return Response({'error': 'Пользователь с таким email не найден'}, status=status.HTTP_404_NOT_FOUND)
 
 
-def verify_reset_code(request, token):
-    data_user = token_to_dict(token)
-    email = data_user["email"]
-    moments_time = data_user["time"]
+def verify_reset_code(request):
+    email = request.data["email"]
     verify_code = request.data.get("verify_code")
     user = User.objects.filter(email=email).first()
     if user:
         user_confirm = User.objects.get(email=email)
         code = user_confirm.confirmation_code
         user_token = create_tokens(user_confirm)
-        if (timezone.now() - user.confirmation_code_created_at) < timedelta(minutes=2) and str(moments_time)==str(user.confirmation_code_created_at):
+        print(user.confirmation_code_created_at)
+        if (timezone.now() - user.confirmation_code_created_at) < timedelta(minutes=2):
             if code == verify_code:
                 return Response(
                     {
