@@ -114,9 +114,9 @@ def create_movie(request):
     serializer = MovieSerializer(data=request.data)
     if serializer.is_valid():
         movie = serializer.save()
-        video_clip = VideoFileClip(movie.movie.url)
-
-        elastic_transcoder = boto3.client('elastictranscoder', region_name=settings.AWS_S3_REGION_NAME)
+        # video_clip = VideoFileClip(movie.movie.url)
+        #
+        # elastic_transcoder = boto3.client('elastictranscoder', region_name=settings.AWS_S3_REGION_NAME)
 
 
         return Response(status=status.HTTP_201_CREATED)

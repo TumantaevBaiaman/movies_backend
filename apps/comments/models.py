@@ -21,6 +21,7 @@ class Comment(models.Model):
     class Meta:
         verbose_name = "Комментария"
         verbose_name_plural = "Коментарии"
+        ordering = ['-created_at']
 
 
 class CommentSeries(models.Model):
@@ -36,3 +37,4 @@ class CommentSeries(models.Model):
     class Meta:
         verbose_name = "Комментария для сериала"
         verbose_name_plural = "Коментарии для сериалов"
+        ordering = ['-created_at']

@@ -38,6 +38,12 @@ class Series(models.Model):
     actors = models.ManyToManyField(
         Actor, verbose_name="актеры"
     )
+    trailer = models.FileField(
+        upload_to="trailer",
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+        blank=True, null=True
+    )
+    age_limit = models.IntegerField(default=2, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name="дата создания записи"
     )
@@ -62,6 +68,11 @@ class Season(models.Model):
     release_date = models.DateField(
         "дата выпуска"
     )
+    trailer = models.FileField(
+        upload_to="trailer",
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+        blank=True, null=True
+    )
 
     is_activ = models.BooleanField(default=True)
     is_free = models.BooleanField(default=False)
@@ -82,6 +93,11 @@ class SeriesVideo(models.Model):
     series_video = models.FileField(
         upload_to="series-video",
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
+    )
+    trailer = models.FileField(
+        upload_to="trailer",
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+        blank=True, null=True
     )
     release_date = models.DateField(
         "дата выпуска"

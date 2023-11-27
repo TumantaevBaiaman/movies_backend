@@ -40,6 +40,12 @@ class Movie(models.Model):
         upload_to="origin-movie",
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
     )
+    trailer = models.FileField(
+        upload_to="trailer",
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+        blank=True, null=True
+    )
+    age_limit = models.IntegerField(default=2, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name="дата создания записи"
     )
