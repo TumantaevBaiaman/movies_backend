@@ -1,12 +1,9 @@
 from celery import shared_task
-from datetime import timedelta
 from django.utils import timezone
-from django.core.mail import send_mail
-from .models import Subscription
 from apps.users.models import Subscription
 
 
 @shared_task
-def end_subscription_task(subscription_id):
-    subscription = Subscription.objects.get(id=subscription_id)
-    subscription.end_subscription()
+def deactivate_expired_subscriptions():
+    expired_subscriptions = Subscription.objects.all()
+    expired_subscriptions.update(is_active=False)

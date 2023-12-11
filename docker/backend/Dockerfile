@@ -17,8 +17,6 @@ COPY --from=builder /app/wheels /wheels
 RUN pip install --no-cache /wheels/*
 COPY . .
 RUN chmod +x ./entrypoint.sh && chown -R app:app .
-RUN chmod +x ./docker/backend/worker-entrypoint.sh && chown -R app:app .
-RUN chmod +x ./docker/backend/beat-entrypoint.sh && chown -R app:app .
 USER app
 EXPOSE 8000
 ENTRYPOINT [ "./entrypoint.sh" ]

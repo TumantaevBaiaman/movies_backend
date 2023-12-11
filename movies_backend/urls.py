@@ -15,6 +15,7 @@ v1_api_urls = [
     path("director/", include("apps.director.urls")),
     path("favorite/", include("apps.favorites.urls")),
     path("series/", include("apps.series.urls")),
+    path("watch_history/", include("apps.watch_history.urls")),
 ]
 
 api_urls = [

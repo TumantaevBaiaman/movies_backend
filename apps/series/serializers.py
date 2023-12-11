@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 from apps.comments.models import CommentSeries
 from apps.comments.serializers import CommentSeriesSerializer
+from apps.favorites.models import Favorite
 from apps.series.models import Series, Season, SeriesVideo
 
 
@@ -39,6 +40,7 @@ class CreateSeriesVideoSerializer(serializers.ModelSerializer):
 
 class SeriesVideoViewSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = SeriesVideo
@@ -51,6 +53,16 @@ class SeriesVideoViewSerializer(serializers.ModelSerializer):
             return total_rating['avg_rating']
         else:
             return None
+
+    def get_is_favorite(self, obj):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user') and request.user.is_authenticated:
+            try:
+                favorite = Favorite.objects.get(user=request.user)
+                return obj in favorite.series.all()
+            except Favorite.DoesNotExist:
+                pass
+        return False
 
 
 class SeasonViewSerializer(serializers.ModelSerializer):

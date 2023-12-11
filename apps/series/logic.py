@@ -3,9 +3,10 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from apps.series.models import Series, Season
+from apps.series.models import Series, Season, SeriesVideo
 from apps.series.serializers import CreateSeriesSerializer, CreateSeasonSerializer, CreateSeriesVideoSerializer, \
-    SeriesViewSerializer
+    SeriesViewSerializer, SeasonViewSerializer, SeriesVideoViewSerializer
+from apps.watch_history.logic import add_to_watch_history
 from movies_backend.tools import get_filters, paginate_queryset
 
 
@@ -96,4 +97,24 @@ def list_series(request):
 def detail_series(request, id):
     series = get_object_or_404(Series, id=id)
     serializer = SeriesViewSerializer(instance=series)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def detail_season(request, id):
+    series = get_object_or_404(Season, id=id)
+    serializer = SeasonViewSerializer(instance=series)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def detail_series_video(request, id):
+    series = get_object_or_404(SeriesVideo, id=id)
+    serializer = SeriesVideoViewSerializer(instance=series)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def detail_view_series_video(request, id):
+    series = get_object_or_404(SeriesVideo, id=id)
+    add_to_watch_history(request=request, content_type="series", content_id=id)
+    series.increment_views()
+    serializer = SeriesVideoViewSerializer(instance=series)
     return Response(serializer.data, status=status.HTTP_200_OK)

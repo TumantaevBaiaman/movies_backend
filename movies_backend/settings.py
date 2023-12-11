@@ -20,11 +20,11 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Указать путь к установленному ffmpeg
-ffmpeg_path = "/usr/bin/ffmpeg"
-
-# Установить переменную среды IMAGEIO_FFMPEG_EXE
-os.environ["IMAGEIO_FFMPEG_EXE"] = ffmpeg_path
+# # Указать путь к установленному ffmpeg
+# ffmpeg_path = "/usr/bin/ffmpeg"
+#
+# # Установить переменную среды IMAGEIO_FFMPEG_EXE
+# os.environ["IMAGEIO_FFMPEG_EXE"] = ffmpeg_path
 
 
 # Quick-start development settings - unsuitable for production
@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'apps.director.apps.DirectorConfig',
     'apps.favorites.apps.FavoritesConfig',
     'apps.series.apps.SeriesConfig',
+    'apps.watch_history.apps.WatchHistoryConfig',
 
     # installs
     'rest_framework',
@@ -72,6 +73,7 @@ INSTALLED_APPS = [
     'mptt',
     # 'storages',
     'corsheaders',
+    'celery'
 ]
 
 MIDDLEWARE = [
@@ -121,23 +123,23 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('POSTGRES_HOST'),
-        'PORT': os.getenv('POSTGRES_PORT'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('POSTGRES_DB'),
+#         'USER': os.getenv('POSTGRES_USER'),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+#         'HOST': os.getenv('POSTGRES_HOST'),
+#         'PORT': os.getenv('POSTGRES_PORT'),
+#     }
+# }
 
 
 # Password validation
@@ -259,10 +261,15 @@ AWS_DEFAULT_ACL = None
 AWS_S3_VERIFY = True
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# celery
-# CELERY_TIMEZONE = "Asia/Bishkek"
-# CELERY_TASK_TRACK_STARTED = True
-# CELERY_TASK_TIME_LIMIT = 30 * 60
-#
-# CELERY_BROKER_URL = f'redis://:{os.getenv("REDIS_PASSWORD", default="")}@redis:6379'
-# CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+# CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULE = {
+    'my-periodic-task': {
+        'task': 'apps.users.tasks.deactivate_expired_subscriptions',
+        'schedule': 15.0,
+    },
+}

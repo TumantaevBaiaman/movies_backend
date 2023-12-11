@@ -87,3 +87,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
         fields = '__all__'
+
+
+class SubscriptionCreateSerializer(serializers.Serializer):
+    ended_at = serializers.DateTimeField()

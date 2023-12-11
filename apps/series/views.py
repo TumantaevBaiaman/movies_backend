@@ -5,8 +5,10 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from apps.series.logic import create_series, create_season, create_series_video, list_series, detail_series
-from apps.series.serializers import CreateSeriesSerializer, CreateSeasonSerializer, SeriesViewSerializer
+from apps.series.logic import create_series, create_season, create_series_video, list_series, detail_series, \
+    detail_season, detail_series_video, detail_view_series_video
+from apps.series.serializers import CreateSeriesSerializer, CreateSeasonSerializer, SeriesViewSerializer, \
+    SeasonViewSerializer, SeriesVideoViewSerializer
 from movies_backend.permissions import IsAuthenticatedAdmin
 
 
@@ -80,6 +82,43 @@ class DetailSeriesAPIView(APIView):
         return detail_series(request, id)
 
 
+class DetailSeasonAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: SeasonViewSerializer()},
+        operation_description="""
+                    `GET` - Получить сезон по id.
+                    Не нужно авторизация
+            """)
+    def get(self, request, id):
+        return detail_season(request, id)
+
+
+class DetailSeriesVideoAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: SeriesVideoViewSerializer()},
+        operation_description="""
+                    `GET` - Получить сериал видео по id.
+                    Не нужно авторизация
+            """)
+    def get(self, request, id):
+        return detail_series_video(request, id)
+
+
+class DetailViewsSeriesVideoAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: SeriesVideoViewSerializer()},
+        operation_description="""
+                        `GET` - Получить сериал видео по id.
+                        Не нужно авторизация
+                """)
+    def get(self, request, id):
+        return detail_view_series_video(request, id)
 
 
 

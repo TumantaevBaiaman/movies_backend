@@ -16,7 +16,8 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from apps.favorites.models import Favorite
 from apps.users.models import User, Subscription
 from apps.users.serializers import UserRegisterSerializer, UserSerializer, ResetChangePasswordSerializer, \
-    LoginUserSerializer
+    LoginUserSerializer, SubscriptionCreateSerializer, SubscriptionSerializer
+
 
 def send_confirmation_code_email(user_email, confirmation_code):
 
@@ -95,11 +96,13 @@ def login_user(request):
     password = request.data.get('password')
     user = authenticate(request, username=email, password=password)
     if user is not None:
+        user_serializer = UserSerializer(instance=user)
         tokens = create_tokens(user)
         if user.email_verify:
             response_data = {
                 'success': 'Успешно!',
                 'verify': True,
+                'user': user_serializer.data,
                 **tokens,
             }
             return Response(response_data, status=status.HTTP_200_OK)
@@ -113,6 +116,7 @@ def login_user(request):
             response_data = {
                 'success': 'Вы ещё не подвердили код водверждение, вам было отправлено код подверждение!',
                 'verify': False,
+                'user': user_serializer.data,
                 **tokens,
             }
             if send:
@@ -186,7 +190,6 @@ def verify_reset_code(request):
         user_confirm = User.objects.get(email=email)
         code = user_confirm.confirmation_code
         user_token = create_tokens(user_confirm)
-        print(user.confirmation_code_created_at)
         if (timezone.now() - user.confirmation_code_created_at) < timedelta(minutes=2):
             if code == verify_code:
                 return Response(
@@ -216,3 +219,39 @@ def reset_change_password(request):
 def profile_user(user):
     serializer_user = UserSerializer(instance=user)
     return Response(serializer_user.data, status=status.HTTP_200_OK)
+
+
+def subscription(request):
+    user = request.user
+    data = request.data
+
+    try:
+        subscription = Subscription.objects.get(user=user)
+    except Subscription.DoesNotExist:
+        subscription = Subscription.objects.create(user=user)
+
+    subscription.ended_at = data["ended_at"]
+    subscription.is_activ = True
+    subscription.save()
+
+    serializer = SubscriptionSerializer(instance=subscription)
+
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+def subscription_detail(request):
+    user = request.user
+
+    try:
+        subscription = Subscription.objects.get(user=user)
+    except Subscription.DoesNotExist:
+        subscription = Subscription.objects.create(user=user)
+
+    serializer = SubscriptionSerializer(instance=subscription)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+

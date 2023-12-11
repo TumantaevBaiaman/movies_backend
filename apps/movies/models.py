@@ -53,6 +53,12 @@ class Movie(models.Model):
     is_activ = models.BooleanField(default=True)
     is_free = models.BooleanField(default=False)
 
+    views = models.PositiveIntegerField(default=0, verbose_name="количество просмотров")
+
+    def increment_views(self):
+        self.views += 1
+        self.save()
+
     def __str__(self):
         return f"{self.title}"
 
