@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import password_validation
 from rest_framework import serializers
 
-from apps.users.models import User, Subscription
+from apps.users.models import User, Subscription, Notification
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -91,3 +91,10 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
 class SubscriptionCreateSerializer(serializers.Serializer):
     ended_at = serializers.DateTimeField()
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Notification
+        fields = '__all__'

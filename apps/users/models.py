@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 import uuid
@@ -50,3 +52,26 @@ class Subscription(models.Model):
     def __str__(self) -> str:
         return f"{self.user} {self.subscribed_at}"
 
+
+class Notification(models.Model):
+    NOTIFICATION_TYPES = [
+        (1, "movie"),
+        (2, "series"),
+        (3, "season"),
+        (4, "series_video"),
+        (5, "other")
+    ]
+
+    users = models.ManyToManyField(User, related_name='notifications')
+    message = models.TextField()
+
+    notification_type = models.IntegerField(choices=NOTIFICATION_TYPES)
+    object_id = models.UUIDField()
+
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("-id",)
+
+    def read_notification(self, user):
+        self.users.remove(user)

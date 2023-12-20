@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.users.logic import create_user_with_tokens, profile_user, confirm_code_register, resend_confirm_code_register, \
-    reset_code, verify_reset_code, reset_change_password, login_user, subscription, subscription_detail
+    reset_code, verify_reset_code, reset_change_password, login_user, subscription, subscription_detail, \
+    notification_list, notification_detail
 from apps.users.serializers import LoginUserSerializer, UserRegisterSerializer, UserSerializer, \
     ConfirmCodeRegisterSerializer, SubscriptionSerializer
 
@@ -128,6 +129,30 @@ class SubscriptionAPIView(APIView):
     )
     def post(self, request):
         return subscription(request)
+
+
+class NotificationListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_description="""
+                            `GET` - Notification list.
+                            """
+    )
+    def get(self, request):
+        return notification_list(request)
+
+
+class NotificationDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_description="""
+                            `GET` - Notification detail.
+                            """
+    )
+    def get(self, request, id):
+        return notification_detail(request, id)
 
 
 

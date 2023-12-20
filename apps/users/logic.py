@@ -8,15 +8,16 @@ from email.mime.text import MIMEText
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 from apps.favorites.models import Favorite
-from apps.users.models import User, Subscription
+from apps.users.models import User, Subscription, Notification
 from apps.users.serializers import UserRegisterSerializer, UserSerializer, ResetChangePasswordSerializer, \
-    LoginUserSerializer, SubscriptionCreateSerializer, SubscriptionSerializer
+    LoginUserSerializer, SubscriptionCreateSerializer, SubscriptionSerializer, NotificationSerializer
 
 
 def send_confirmation_code_email(user_email, confirmation_code):
@@ -250,6 +251,23 @@ def subscription_detail(request):
     serializer = SubscriptionSerializer(instance=subscription)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def notification_list(request):
+    user = request.user
+    notifications = Notification.objects.filter(users=user)
+    serializer = NotificationSerializer(instance=notifications, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def notification_detail(request, id):
+    user = request.user
+    notifications = get_object_or_404(Notification, id=id)
+    notifications.read_notification(user)
+    serializer = NotificationSerializer(instance=notifications)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 
 
 

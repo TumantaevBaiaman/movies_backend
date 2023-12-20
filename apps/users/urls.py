@@ -19,4 +19,6 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('subscription/', views.SubscriptionAPIView.as_view(), name='subscription'),
+    path('notification_list/', views.NotificationListAPIView.as_view(), name="notification_list"),
+    path('notification_detail/<int:id>/', views.NotificationDetailAPIView.as_view(), name="notification_detail")
 ]
