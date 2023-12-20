@@ -4,7 +4,7 @@ from django.core.validators import MaxValueValidator
 from django.db import models
 
 from apps.movies.models import Movie
-from apps.series.models import SeriesVideo
+from apps.series.models import SeriesVideo, Series
 from apps.users.models import User
 
 
@@ -29,7 +29,7 @@ class CommentSeries(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    series = models.ForeignKey(SeriesVideo, on_delete=models.CASCADE)
+    series = models.ForeignKey(Series, on_delete=models.CASCADE)
     rating = models.PositiveIntegerField(default=5, validators=[MaxValueValidator(10)])
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

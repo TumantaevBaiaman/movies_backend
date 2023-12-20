@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from apps.comments.models import Comment, CommentSeries
 from apps.comments.serializers import CommentSerializer, CommentSeriesSerializer
 from apps.movies.models import Movie
-from apps.series.models import SeriesVideo
+from apps.series.models import Series
 from movies_backend.tools import paginate_queryset
 
 
@@ -87,7 +87,7 @@ def list_comments(request, id_movie):
 # series
 def create_comment_series(request, id_series):
     user = request.user
-    series = get_object_or_404(SeriesVideo, id=id_series)
+    series = get_object_or_404(Series, id=id_series)
     mutable_data = request.data.copy()
     mutable_data['series'] = series.id
     mutable_data['user'] = user.id

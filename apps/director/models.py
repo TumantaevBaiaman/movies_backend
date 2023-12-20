@@ -13,3 +13,6 @@ class Director(models.Model):
     class Meta:
         verbose_name = "Режиссер"
         verbose_name_plural = "Режиссеры"
+
+    def __str__(self):
+        return f"{self.name}"

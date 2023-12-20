@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from apps.favorites.models import Favorite
 from apps.favorites.serializers import FavoriteSerializer, ViewFavoriteSerializer
 from apps.movies.models import Movie
-from apps.series.models import SeriesVideo
+from apps.series.models import Series
 
 
 def add_favorite(request, content_type, content_id):
@@ -22,7 +22,7 @@ def add_favorite(request, content_type, content_id):
         serializer = FavoriteSerializer(favorite)
         return Response(serializer.data, status=status.HTTP_200_OK)
     elif content_type == "series":
-        series = get_object_or_404(SeriesVideo, id=content_id)
+        series = get_object_or_404(Series, id=content_id)
         favorite.add_to_favorites_series(series)
         serializer = FavoriteSerializer(favorite)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -43,7 +43,8 @@ def remove_favorite(request, content_type, content_id):
         favorite.remove_from_favorites_movies(movie)
         return Response(status=status.HTTP_204_NO_CONTENT)
     elif content_type == "series":
-        series = get_object_or_404(SeriesVideo, id=content_id)
+        print(content_id)
+        series = get_object_or_404(Series, id=content_id)
         favorite.remove_from_favorites_series(series)
         return Response(status=status.HTTP_204_NO_CONTENT)
     else:

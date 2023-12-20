@@ -48,6 +48,7 @@ class Series(models.Model):
         auto_now_add=True, verbose_name="дата создания записи"
     )
 
+    moon = models.BooleanField(default=False)
     is_activ = models.BooleanField(default=True)
     is_free = models.BooleanField(default=False)
 
@@ -67,11 +68,6 @@ class Season(models.Model):
     season = models.IntegerField(default=1)
     release_date = models.DateField(
         "дата выпуска"
-    )
-    trailer = models.FileField(
-        upload_to="trailer",
-        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
-        blank=True, null=True
     )
 
     is_activ = models.BooleanField(default=True)
@@ -93,11 +89,6 @@ class SeriesVideo(models.Model):
     series_video = models.FileField(
         upload_to="series-video",
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
-    )
-    trailer = models.FileField(
-        upload_to="trailer",
-        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
-        blank=True, null=True
     )
     release_date = models.DateField(
         "дата выпуска"

@@ -50,6 +50,7 @@ class Movie(models.Model):
         auto_now_add=True, verbose_name="дата создания записи"
     )
 
+    moon = models.BooleanField(default=False)
     is_activ = models.BooleanField(default=True)
     is_free = models.BooleanField(default=False)
 

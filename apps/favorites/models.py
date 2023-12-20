@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 
 from apps.movies.models import Movie
-from apps.series.models import SeriesVideo
+from apps.series.models import SeriesVideo, Series
 from apps.users.models import User
 
 
@@ -13,7 +13,7 @@ class Favorite(models.Model):
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     movies = models.ManyToManyField(Movie)
-    series = models.ManyToManyField(SeriesVideo)
+    series = models.ManyToManyField(Series)
 
     def add_to_favorites_movies(self, movie):
         self.movies.add(movie)
