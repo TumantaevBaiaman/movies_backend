@@ -6,4 +6,4 @@ from apps.users.models import Subscription
 @shared_task
 def deactivate_expired_subscriptions():
     expired_subscriptions = Subscription.objects.all()
-    expired_subscriptions.update(is_active=False)
+    expired_subscriptions.update(active=False)
