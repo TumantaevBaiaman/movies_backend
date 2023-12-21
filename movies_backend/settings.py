@@ -36,6 +36,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
@@ -43,6 +45,7 @@ ALLOWED_HOSTS = [
     '16.16.56.68',
     'movie-back-balancer-1086989028.eu-north-1.elb.amazonaws.com',
     '18.136.119.119',
+    'lifecinema-backend.com',
 ]
 
 
