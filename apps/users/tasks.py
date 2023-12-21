@@ -5,5 +5,9 @@ from apps.users.models import Subscription
 
 @shared_task
 def deactivate_expired_subscriptions():
-    expired_subscriptions = Subscription.objects.all()
-    expired_subscriptions.update(active=False)
+    current_time = timezone.now()
+    expired_subscriptions = Subscription.objects.filter(ended_at__lte=current_time, active=True)
+
+    for subscription in expired_subscriptions:
+        subscription.active = False
+        subscription.save()

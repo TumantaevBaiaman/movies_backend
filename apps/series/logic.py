@@ -78,7 +78,8 @@ def list_series(request):
         'is_free': request.GET.get('is_free')
     }
     if request.GET.get('release_date'):
-        filters_data['release_date__gte'] = request.GET.get('release_date')
+        release_date = f"{request.GET.get('release_date')}-01-01"
+        filters_data['release_date__gte'] = release_date
     filters = get_filters(request, filters_data)
     queryset = queryset.filter(**filters)
 
