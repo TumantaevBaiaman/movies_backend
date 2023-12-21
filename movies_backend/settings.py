@@ -241,6 +241,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3001",
+    "lifecinema-backend.com"
 ]
 
 # send emails
