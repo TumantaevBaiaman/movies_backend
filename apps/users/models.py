@@ -52,6 +52,14 @@ class Subscription(models.Model):
     def __str__(self) -> str:
         return f"{self.user} {self.subscribed_at}"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        user = self.user
+        message = f'Вы успешно оформили подписку типа. Проверьте новинки на сайте!'
+        notification = Notification.objects.create(message=message, notification_type=6, object_id=self.id)
+        notification.users.set([user])
+
 
 class Notification(models.Model):
     NOTIFICATION_TYPES = [
@@ -59,7 +67,8 @@ class Notification(models.Model):
         (2, "series"),
         (3, "season"),
         (4, "series_video"),
-        (5, "other")
+        (5, "other"),
+        (6, "subscription")
     ]
 
     users = models.ManyToManyField(User, related_name='notifications')

@@ -49,7 +49,6 @@ def create_user(data):
         user.confirmation_code = confirmation_code
         user.confirmation_code_created_at = timezone.now()
         Favorite.objects.create(user=user).save()
-        Subscription.objects.create(user=user).save()
         user.save()
         send = send_confirmation_code_email(user_email=serializer.validated_data.get("email"), confirmation_code=confirmation_code)
         if send:

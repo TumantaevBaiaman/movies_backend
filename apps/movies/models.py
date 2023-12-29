@@ -40,6 +40,12 @@ class Movie(models.Model):
         upload_to="origin-movie",
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
     )
+    movie_1080 = models.FileField(
+        upload_to="origin-movie",
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+        blank=True,
+        null=True
+    )
     trailer = models.FileField(
         upload_to="trailer",
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])],

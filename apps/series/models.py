@@ -90,6 +90,12 @@ class SeriesVideo(models.Model):
         upload_to="series-video",
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
     )
+    series_video_1080 = models.FileField(
+        upload_to="series-video",
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+        blank=True,
+        null=True
+    )
     release_date = models.DateField(
         "дата выпуска"
     )
