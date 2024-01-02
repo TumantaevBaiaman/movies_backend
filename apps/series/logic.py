@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
@@ -8,6 +10,12 @@ from apps.series.serializers import CreateSeriesSerializer, CreateSeasonSerializ
     SeriesViewSerializer, SeasonViewSerializer, SeriesVideoViewSerializer
 from apps.watch_history.logic import add_to_watch_history
 from movies_backend.tools import get_filters, paginate_queryset
+
+
+def get_last_three_months():
+    today = datetime.now().date()
+    three_months_ago = today - timedelta(days=3 * 30)
+    return three_months_ago
 
 
 def create_series(request):
@@ -75,11 +83,15 @@ def list_series(request):
     filters_data = {
         'title__icontains': request.GET.get('title'),
         'genres__name__in': request.GET.getlist('genres'),
-        'is_free': request.GET.get('is_free')
+        'is_free': request.GET.get('is_free'),
+        'moon': request.GET.get('moon')
     }
     if request.GET.get('release_date'):
-        release_date = f"{request.GET.get('release_date')}-01-01"
-        filters_data['release_date__gte'] = release_date
+        if request.GET.get('release_date')=="new":
+            filters_data['release_date__gte'] = f"{get_last_three_months()}"
+        else:
+            release_date = f"{request.GET.get('release_date')}-01-01"
+            filters_data['release_date__gte'] = release_date
     filters = get_filters(request, filters_data)
     queryset = queryset.filter(**filters)
 
