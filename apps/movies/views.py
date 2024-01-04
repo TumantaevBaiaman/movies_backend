@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 
 from apps.movies.logic import list_movies, detail_movie, delete_movie, put_movie, path_movie, create_movie, \
-    list_movie_genre, list_movie_recommendation, detail_views_movie, list_top_movie
+    list_movie_genre, list_movie_recommendation, detail_views_movie, list_top_movie, list_movies_moon
 from apps.movies.serializers import MovieSerializer
 
 
@@ -35,6 +35,19 @@ class ListMovieAPIView(APIView):
                 """)
     def get(self, request):
         return list_movies(request)
+
+
+class ListMovieMoonAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: MovieSerializer(many=True)},
+        operation_description="""
+                    `GET` - Получить фильмы который скоро выходит.
+                    Не нужно авторизация
+                """)
+    def get(self, request):
+        return list_movies_moon(request)
 
 
 class DetailMovieAPIView(APIView):

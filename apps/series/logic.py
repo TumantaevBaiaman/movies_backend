@@ -78,13 +78,12 @@ def create_series_video(request, content_type, content_id):
 
 
 def list_series(request):
-    queryset = Series.objects.all()
+    queryset = Series.objects.filter(moon=False)
 
     filters_data = {
         'title__icontains': request.GET.get('title'),
         'genres__name__in': request.GET.getlist('genres'),
-        'is_free': request.GET.get('is_free'),
-        'moon': request.GET.get('moon')
+        'is_free': request.GET.get('is_free')
     }
     if request.GET.get('release_date'):
         if request.GET.get('release_date')=="new":
@@ -92,6 +91,30 @@ def list_series(request):
         else:
             release_date = f"{request.GET.get('release_date')}-01-01"
             filters_data['release_date__gte'] = release_date
+    filters = get_filters(request, filters_data)
+    queryset = queryset.filter(**filters)
+
+    paginated_data = paginate_queryset(request, queryset)
+
+    serializer = SeriesViewSerializer(paginated_data['results'], many=True)
+
+    return Response({
+        'count': paginated_data['count'],
+        'next': paginated_data['next'],
+        'previous': paginated_data['previous'],
+        'results': serializer.data
+    }, status=status.HTTP_200_OK)
+
+
+def list_series_moon(request):
+    queryset = Series.objects.filter(moon=True)
+
+    filters_data = {
+        'title__icontains': request.GET.get('title'),
+        'genres__name__in': request.GET.getlist('genres'),
+        'is_free': request.GET.get('is_free')
+    }
+
     filters = get_filters(request, filters_data)
     queryset = queryset.filter(**filters)
 

@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
 from apps.series.logic import create_series, create_season, create_series_video, list_series, detail_series, \
-    detail_season, detail_series_video, detail_view_series_video
+    detail_season, detail_series_video, detail_view_series_video, list_series_moon
 from apps.series.serializers import CreateSeriesSerializer, CreateSeasonSerializer, SeriesViewSerializer, \
     SeasonViewSerializer, SeriesVideoViewSerializer
 from movies_backend.permissions import IsAuthenticatedAdmin
@@ -67,6 +67,19 @@ class ListSeriesView(APIView):
         """)
     def get(self, request):
         return list_series(request)
+
+
+class ListSeriesMoonView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: SeriesViewSerializer(many=True)},
+        operation_description="""
+            `GET` - Получить сериал котоый скоро выходит.
+            Не нужно авторизация
+        """)
+    def get(self, request):
+        return list_series_moon(request)
 
 
 class DetailSeriesAPIView(APIView):

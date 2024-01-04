@@ -37,12 +37,11 @@ def get_last_three_months():
 
 
 def list_movies(request):
-    queryset = Movie.objects.all()
+    queryset = Movie.objects.filter(moon=False)
     filters_data = {
         'title__icontains': request.GET.get('title'),
         'genres__name__in': request.GET.getlist('genres'),
-        'is_free': request.GET.get('is_free'),
-        'moon': request.GET.get('moon')
+        'is_free': request.GET.get('is_free')
     }
     if request.GET.get('release_date'):
         if request.GET.get('release_date') == "new":
@@ -87,6 +86,27 @@ def list_movie_recommendation(request, id_genre):
     movies = Movie.objects.filter(genres__id=id_genre)[:10]
     serializer = MovieViewSerializer(instance=movies, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def list_movies_moon(request):
+    queryset = Movie.objects.filter(moon=True)
+    filters_data = {
+        'title__icontains': request.GET.get('title'),
+        'genres__name__in': request.GET.getlist('genres'),
+        'is_free': request.GET.get('is_free')
+    }
+
+    filters = get_filters(request, filters_data)
+    queryset = queryset.filter(**filters)
+    paginated_data = paginate_queryset(request, queryset)
+
+    serializer = MovieViewSerializer(paginated_data['results'], many=True)
+    return Response({
+        'count': paginated_data['count'],
+        'next': paginated_data['next'],
+        'previous': paginated_data['previous'],
+        'results': serializer.data
+    }, status=status.HTTP_200_OK)
 
 
 def list_top_movie(request):
